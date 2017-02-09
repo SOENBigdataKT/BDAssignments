@@ -1,0 +1,10 @@
+package org.webservices.beans;
+
+import java.util.List;
+
+public class ProductCatalog {
+
+	public List<String> getProductCategories(){
+		List<String> categories =new ArrayList<>();
+	}
+}

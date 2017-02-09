@@ -1,0 +1,25 @@
+package org.webservices.beans;
+//Java program to demonstrate BufferedReader
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+public class ProductCatalog 
+{
+ public static void main(String[] args) throws IOException 
+ {
+     //Enter data using BufferReader
+     BufferedReader reader = 
+                new BufferedReader(new InputStreamReader(System.in));
+     String list="12 342 234" ;
+     // Reading data using readLine
+     int sum=0;
+     String[] numbersString = list.split(" ");
+     for(int i=0;i<numbersString.length;i++){
+    	 sum = sum+Integer.parseInt(numbersString[i]);
+    	 
+     }
+
+     // Printing the read line
+     System.out.println(name);        
+ }
+}
