@@ -1,0 +1,25 @@
+package com.temp;
+
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
+
+
+public class AllPairsMapper extends Mapper<Object,Text,IntWritable,IntWritable>{
+	public void map(Object key,Text values,Context context) throws IOException,InterruptedException{
+		StringTokenizer st = new StringTokenizer(values.toString());
+		IntWritable user=new IntWritable(Integer.parseInt(st.nextToken()));
+		IntWritable userFollowsAccount = new IntWritable();
+		while(st.hasMoreTokens()){
+			Integer account=Integer.parseInt(st.nextToken());
+			userFollowsAccount.set(account);
+			context.write(userFollowsAccount,user);
+			userFollowsAccount.set(-account);
+			context.write(user,userFollowsAccount);
+
+		}
+	}
+}

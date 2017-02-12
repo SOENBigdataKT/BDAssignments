@@ -1,0 +1,50 @@
+package com.wtf;
+
+
+import java.io.IOException;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class WTFAlgorithm {
+	public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
+		try {
+			Configuration conf1 = new Configuration();
+			Job firstJob = new Job(conf1, "WTFAlgo First Job");
+			firstJob.setJarByClass(WTFAlgorithm.class);
+			firstJob.setMapperClass(FirstMapper.class);
+			firstJob.setReducerClass(FirstReducer.class);
+			firstJob.setOutputKeyClass(IntWritable.class);
+			firstJob.setOutputValueClass(IntWritable.class);
+			FileInputFormat.addInputPath(firstJob, new Path(args[0]));
+			FileSystem fsObj = FileSystem.get(conf1);
+			if(fsObj.exists(new Path(args[1]))){
+				fsObj.delete(new Path(args[1]),true);
+			}
+			FileOutputFormat.setOutputPath(firstJob, new Path(args[1]));
+			if(firstJob.waitForCompletion(true)){
+				Job secondJob = Job.getInstance(conf1, "WTFAlgo Second Job");
+				secondJob.setMapperClass(SecondMapper.class);
+				secondJob.setReducerClass(SecondReducer.class);
+				secondJob.setOutputKeyClass(IntWritable.class);
+				secondJob.setOutputValueClass(IntWritable.class);
+				FileInputFormat.addInputPath(secondJob, new Path(args[1]));
+				if(fsObj.exists(new Path(args[2]))){
+					fs.delete(new Path(args[2]),true);
+				}
+				FileOutputFormat.setOutputPath(secondJob, new Path(args[2]));
+				secondJob.waitForCompletion(true);			
+			}
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+}

@@ -1,0 +1,28 @@
+package com.wtf;
+
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Mapper.Context;
+
+public class SecondMapper extends Mapper<Object,Text,IntWritable,IntWritable>{
+	public void map(Object key,Text values,Context context) throws IOException,InterruptedException{
+		StringTokenizer st1 = new StringTokenizer(values.toString().substring(2));
+		Integer usr = Integer.parseInt(values.toString().substring(0,1));
+		while(st1.hasMoreTokens()){
+			Integer usr1=Integer.parseInt(st1.nextToken().toString().trim());
+			StringTokenizer st2 = new StringTokenizer(values.toString().substring(2));
+			while(st2.hasMoreTokens()){
+				Integer usr2=Integer.parseInt(st2.nextToken().toString().trim());
+				if((!(usr1==usr2))&&(!(usr1<0||usr2<0))){
+					context.write(new IntWritable(usr1),new IntWritable(usr2));	
+				}
+			}
+			if(usr1<0)
+				context.write(new IntWritable(usr), new IntWritable(usr1));
+		}
+	}
+}
